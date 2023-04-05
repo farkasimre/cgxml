@@ -38,21 +38,32 @@
 		<title>DATE <?= $sql1_result_data["CADGENNO"] ?></title>
 		
 		<style type="text/css">
-			h2 {
-			color: black;
-			font-family: "Trebuchet MS", sans-serif;
-			font-style: normal;
-			font-weight: bold;
-			text-decoration: none;
-			font-size: 12pt;
-			}
 			h1 {
 			color: black;
 			font-family: "Trebuchet MS", sans-serif;
 			font-style: normal;
 			font-weight: bold;
 			text-decoration: none;
+			text-align: center;
 			font-size: 20pt;
+			}
+			h2 {
+			color: black;
+			font-family: "Trebuchet MS", sans-serif;
+			font-style: normal;
+			font-weight: bold;
+			text-decoration: none;
+			text-align: center;
+			font-size: 14pt;
+			}
+			h3 {
+			color: black;
+			font-family: "Trebuchet MS", sans-serif;
+			font-style: normal;
+			font-weight: bold;
+			text-decoration: none;
+			text-align: left;
+			font-size: 12pt;
 			}
 			p {
 			color: black;
@@ -68,7 +79,7 @@
 			vertical-align: middle;
 			text-align: center;
 			overflow: visible;
-			border: 1px solid black;
+			border: 2px solid black;
 			}
 		</style>
 	</head>
@@ -77,11 +88,11 @@
 			<p><br></p>
 			<p style="text-align: right;">Comuna/Oraş/Municipiu: Cernat</p>
 			<p><br></p>
-			<p style="text-align: center;">DATE DESPRE IMOBILUL NR. <?= $sql1_result_data["CADGENNO"] ?></p>
-			<p style="text-align: center;">Sector cadastral: <?= $sql1_result_data["CADSECTOR"] ?></p>
+			<h2>DATE DESPRE IMOBILUL NR. <?= $sql1_result_data["CADGENNO"] ?></h2>
+			<h2>Sector cadastral: <?= $sql1_result_data["CADSECTOR"] ?></h2>
 			<p><br></p>
 			<p><br></p>
-			<h1 style="text-align: center;">A. Partea I. Descrierea imobilului</h1>
+			<h1>A. Partea I. Descrierea imobilului</h1>
 
 			<p style="text-align: right;">Identificator electronic: <?= $sql1_result_data["E2IDENTIFIER"] ?></p>
 			<p style="text-align: right;">Nr. CF vechi: <?= $sql1_result_data["PAPERLBNO"] ?></p>
@@ -89,7 +100,7 @@
 			<p style="text-align: right;">Nr. topografic: <?= $sql1_result_data["TOPONO"] ?></p>
 			
 			<p><br></p>
-			<h2>TEREN 
+			<h3>TEREN 
 				<?php 
 					$sql5 = "SELECT distinct LANDID, INTRAVILAN FROM parcel WHERE LANDID in (select LANDID from land WHERE CADGENNO=" . $param . ")";
 					$result5 = $conn->query($sql5);
@@ -98,15 +109,15 @@
 					echo $sql5_result_data["INTRAVILAN"] =='true' ? 'Intravilan' :  'Extravilan'; 
 					}
 				?>
-			</h2>
-			<h2>Adresa: Loc. Cernat, <?= strtolower($sql4_result_data["STREETTYPE"]); ?>
+			</h3>
+			<h3>Adresa: Loc. Cernat, <?= strtolower($sql4_result_data["STREETTYPE"]); ?>
 				<?= $sql4_result_data["STREETNAME"] . ',' ?>
 				<?= 'nr: '.$sql4_result_data["POSTALNUMBER"] . ',' ?>
 				<?= $sql4_result_data["BLOCK"] == '' ? '' : ($sql4_result_data["BLOCK"]. ',') ?>
 				<?= $sql4_result_data["ENTRY"] == '' ? '' : ($sql4_result_data["ENTRY"]. ',') ?>
 				<?= $sql4_result_data["FLOOR"] == '0' ? '' : ($sql4_result_data["FLOOR"]. ',') ?>
 				<?= $sql4_result_data["APNO"] == '0' ? '' : ($sql4_result_data["APNO"]. ',') ?> Jud. Covasna
-			</h2>
+			</h3>
 
 			<table>
 				<tbody>
@@ -124,7 +135,7 @@
 							<p>Observaţii / Referinţe</p>
 						</th>
 					</tr>
-					<tr style="height:16pt">
+					<tr>
 						<td style="width:16pt">
 							<p>A1</p>
 						</td>
@@ -142,11 +153,11 @@
 			</table>
 
 			<p><br></p>
-			<h2>Parcele</h2>
+			<h3>Parcele</h3>
 
 			<table>
 				<tbody>
-					<tr style="height:23pt">
+					<tr>
 						<td style="width:17pt">
 							<p>Crt</p>
 						</td>
@@ -180,7 +191,7 @@
 						$result = $conn->query($sql);
 						while($row=mysqli_fetch_assoc($result)){ 
 					?>
-					<tr style="height:20pt">
+					<tr>
 						<td style="width:17pt">
 							<p><?= $row["NUMBER"] ?></p>
 						</td>
@@ -214,7 +225,7 @@
 			</table>
 			
 			<p><br></p>
-			<h2>Construcţii</h2>
+			<h3>Construcţii</h3>
 			
 			<table>
 				<tbody>
@@ -270,7 +281,7 @@
 
 			<p><br></p>
 			<p><br></p>
-			<h1 style="text-align: center;">B. Partea II. Proprietari şi acte</h1>
+			<h1>B. Partea II. Proprietari şi acte</h1>
 
 			<table>
 				<tbody>
@@ -326,7 +337,7 @@
 							</p>
 						</td>
 					</tr>
-					<tr style="height:12pt">
+					<tr>
 						<td style="width:475pt" colspan="2">
 							<?php $i=0;
 								while($row8=mysqli_fetch_assoc($result8)){ $i++
@@ -341,7 +352,7 @@
 
 			<p><br></p>
 			<p><br></p>
-			<h1 style="text-indent: -14pt;text-align: center;">C. Partea III. SARCINI</h1>
+			<h1>C. Partea III. SARCINI</h1>
 			
 
 			<table>
