@@ -38,6 +38,12 @@
 		<title>DATE <?= $sql1_result_data["CADGENNO"] ?></title>
 		
 		<style type="text/css">
+			.container {
+  			margin: auto;
+			max-width: 991px;
+			padding: 0 20px;
+			border: 0px solid red;
+			}
 			h1 {
 			color: black;
 			font-family: "Trebuchet MS", sans-serif;
@@ -80,6 +86,7 @@
 			text-align: center;
 			overflow: visible;
 			border: 2px solid black;
+			line-height: 1.5em;
 			}
 		</style>
 	</head>
