@@ -407,6 +407,8 @@
 
 
 	<h1 style="text-indent: -14pt;text-align: center;">C. Partea III. SARCINI</h1>
+	
+
 	<table style="border-collapse:collapse;margin-left:6pt" cellspacing="0">
 		<tbody><tr style="height:23pt">
 			<td style="width:350pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
