@@ -11,11 +11,13 @@
 			$param = $_GET['ID'];
 	
 			$sql1_result=select_from_land_CADGENNO($param);
-			if ($sql1_result->num_rows > 0) {
-			$sql1_result_data=$sql1_result->fetch_assoc();
-			} else {
-			echo "0 results";
-			}
+			//if ($sql1_result->num_rows > 0) {
+			//$sql1_result_data=$sql1_result->fetch_assoc();
+			$sql1_result_data = pg_fetch_array($sql1_result);
+			//print_r($sql1_result);
+			//} else {
+			//echo "0 results";
+			//}
 				
 			$sql2_result=select_from_parcel_CADGENNO($param);
 			if ($sql2_result->num_rows > 0) {
@@ -39,16 +41,16 @@
 			}
 		?>
 		
-		<title>DATE <?= $sql1_result_data["CADGENNO"] ?></title>
+		<title>DATE <?= $sql1_result_data["cadgenno"] ?></title>
 
 			<p style="text-align: right;">Comuna/Oraş/Municipiu: Cernat</p>
-			<h2>DATE DESPRE IMOBILUL NR. <?= $sql1_result_data["CADGENNO"] ?></h2>
-			<h2>Sector cadastral: <?= $sql1_result_data["CADSECTOR"] ?></h2>
+			<h2>DATE DESPRE IMOBILUL NR. <?= $sql1_result_data["cadgenno"] ?></h2>
+			<h2>Sector cadastral: <?= $sql1_result_data["cadsector"] ?></h2>
 			
 			<h1>A. Partea I. Descrierea imobilului</h1>
 
-			<p style="text-align: right;">Identificator electronic: <?= $sql1_result_data["E2IDENTIFIER"] ?><br>Nr. CF vechi: <?= $sql1_result_data["PAPERLBNO"] ?> <br>Nr. CAD vechi: <?= $sql1_result_data["PAPERCADNO"] ?></p>
-			<p style="text-align: right;">Nr. topografic: <?= $sql1_result_data["TOPONO"] ?></p>
+			<p style="text-align: right;">Identificator electronic: <?= $sql1_result_data["e2identifier"] ?><br>Nr. CF vechi: <?= $sql1_result_data["paperlbno"] ?> <br>Nr. CAD vechi: <?= $sql1_result_data["papercadno"] ?></p>
+			<p style="text-align: right;">Nr. topografic: <?= $sql1_result_data["topono"] ?></p>
 			
 			<p><br></p>
 			<h3>TEREN 
@@ -91,13 +93,13 @@
 							A1
 						</td>
 						<td style="width:70pt">
-							<?= $sql1_result_data["E2IDENTIFIER"] ?>
+							<?= $sql1_result_data["e2identifier"] ?>
 						</td>
 						<td style="width:90pt">
-							<?= $sql1_result_data["MEASUREDAREA"] ?>
+							<?= $sql1_result_data["measuredarea"] ?>
 						</td>
 						<td style="width:324pt">
-							<?= $sql1_result_data["ENCLOSED_RES"]=='true' ? 'Teren imprejmuit,' :  'Teren neimprejmuit,'; ?> <?= $sql1_result_data["NOTES"] ?>
+							<?= $sql1_result_data["enclosed_res"]=='true' ? 'Teren imprejmuit,' :  'Teren neimprejmuit,'; ?> <?= $sql1_result_data["notes"] ?>
 						</td>
 					</tr>
 				</tbody>
