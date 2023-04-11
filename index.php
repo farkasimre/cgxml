@@ -19,21 +19,7 @@
 			//echo "0 results";
 			//}
 				
-			//$sql2_result=select_from_parcel_CADGENNO($param);
-			//if ($sql2_result->num_rows > 0) {
-			//$sql2_result_data=pg_fetch_array($sql2_result);
-			//print_r($sql2_result_data);
-			//} else {
-			//echo "0 results";
-			//}
-					
-			//$sql3_result=select_from_building_CADGENNO($param);
-			//if ($sql3_result->num_rows > 0) {
-			//$sql3_result_data=$sql3_result->fetch_assoc();
-			//} else {
-			//echo "0 results";
-			//}
-
+		
 			$sql4_result=select_from_address_CADGENNO($param);
 			//if ($sql4_result->num_rows > 0) {
 			//$sql4_result_data=$sql4_result->fetch_assoc();
