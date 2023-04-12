@@ -271,8 +271,16 @@
 							B<?= $row6[14] ?>
 						</td>
 						<td style="width:325pt">
+							<?php
+							if ($row6[1] <>"NOTATION") 
+							{ 
+							?>
 							<?= $row6[1] ?>, drept de <?= $row6[2] ?> <?= $row6[3] ?>, dobandit prin 
-							<?= $row6[6] ?>, cota actuala <?= $row6[9] ?> <?= $row6[4] ?> <?= $row6[12] ?>
+							<?= $row6[6] ?>, cota actuala <?= $row6[9] ?> 
+							<?PHP
+							}
+							?>
+							<?= $row6[4] ?> <?= $row6[12] ?>
 						</td>
 						<td style="width:150pt">
 							<?= $a1===1 ? 'A1, ' :  ''; ?> 
