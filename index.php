@@ -1,33 +1,25 @@
 <?php include ('partials/connect.php'); ?>
 <?php include ('partials/header.php'); ?>
 
-
-<!-- Introduction -->
 <div class="section">
 	<div class="container">
-		
 		<div class="units-row units-split wrap">
 			<?php
 			$param = $_GET['ID'];
 	
 			$sql1_result=select_from_land_CADGENNO($param);
-			//if ($sql1_result->num_rows > 0) {
-			//$sql1_result_data=$sql1_result->fetch_assoc();
+			if (pg_num_rows($sql1_result) == 0) 
+			{
+			echo "ID ".$param."???";
+			}
+			else
+			{
 			$sql1_result_data = pg_fetch_array($sql1_result);
-			//print_r($sql1_result);
-			//} else {
-			//echo "0 results";
-			//}
-				
-		
+			$landid = $sql1_result_data["landid"];
+			
 			$sql4_result=select_from_address_CADGENNO($param);
-			//if ($sql4_result->num_rows > 0) {
-			//$sql4_result_data=$sql4_result->fetch_assoc();
 			$sql4_result_data = pg_fetch_array($sql4_result);
-			//} else {
-			//echo "0 results";
-			//}
-		?>
+			?>
 		
 		<title>DATE <?= $sql1_result_data["cadgenno"] ?></title>
 
@@ -44,8 +36,8 @@
 			<p><br></p>
 			<h3>TEREN 
 				<?php 
-					$sql5 = "SELECT distinct landid, intravilan FROM cg_parcel WHERE landid in (select landid from cg_land WHERE cadgenno=" . $param . ")";
-					$result5 = pg_query($conn2, $sql5);
+					$sql5 = "SELECT distinct landid, intravilan FROM cg_parcel WHERE landid =" . $landid;
+					$result5 = pg_query($sql5);
 					$sql5_result_data = pg_fetch_assoc($result5);
 					if (pg_num_rows($result5) == 1) {
 					echo $sql5_result_data["intravilan"] =='true' ? 'Intravilan' :  'Extravilan'; 
@@ -55,10 +47,10 @@
 			<h3>Adresa: Loc. Cernat, <?= strtolower($sql4_result_data["streettype"]); ?>
 				<?= $sql4_result_data["streetname"] . ',' ?>
 				<?= 'nr: '.$sql4_result_data["postalnumber"] . ',' ?>
-				<?= $sql4_result_data["block"] == '' ? '' : ($sql4_result_data["block"]. ',') ?>
-				<?= $sql4_result_data["entry"] == '' ? '' : ($sql4_result_data["entry"]. ',') ?>
-				<?= $sql4_result_data["floor"] == '0' ? '' : ($sql4_result_data["floor"]. ',') ?>
-				<?= $sql4_result_data["apno"] == '0' ? '' : ($sql4_result_data["apno"]. ',') ?> Jud. Covasna
+				<?= $sql4_result_data["block"] == '' ? '' : ('bloc '.$sql4_result_data["block"]. ',') ?>
+				<?= $sql4_result_data["entry"] == '' ? '' : ('scara '.$sql4_result_data["entry"]. ',') ?>
+				<?= $sql4_result_data["floor"] == '0' ? '' : ('etaj '.$sql4_result_data["floor"]. ',') ?>
+				<?= $sql4_result_data["apno"] == '0' ? '' : ('apartament '.$sql4_result_data["apno"]. ',') ?> Jud. Covasna
 			</h3>
 
 			<table>
@@ -129,10 +121,9 @@
 						</td>
 					</tr>
 					<?php 
-						$sql = "SELECT * FROM cg_parcel WHERE landid in (select landid from cg_land where cg_land.cadgenno=" . $param . ") order by number";
-						$result = pg_query($conn2, $sql);
+						$sql = "SELECT * FROM cg_parcel WHERE landid = " . $landid . " order by number";
+						$result = pg_query($sql);
 						while($row = pg_fetch_row($result)){ 
-						//	print_r($row);
 					?>
 					<tr>
 						<td style="width:17pt">
@@ -167,6 +158,12 @@
 				</tbody>
 			</table>
 			
+			<?php
+				$sql = "SELECT * FROM cg_building WHERE landid =" . $landid . " ORDER BY buildno";
+				$result = pg_query($sql);
+				//print_r($result);
+				if (pg_num_rows($result) <> 0) {
+			?>
 			<p><br></p>
 			<h3>Construcţii</h3>
 			
@@ -176,10 +173,10 @@
 						<td style="width:29pt">
 							Crt
 						</td>
-						<td style="width:77pt">
-							Număr
+						<td style="width:29pt">
+							Nr cad/ Nr topo
 						</td>
-						<td style="width:95pt">
+						<td style="width:65pt">
 							Destinaţie construcţie
 						</td>
 						<td style="width:65pt">
@@ -188,31 +185,54 @@
 						<td style="width:39pt">
 							Situaţie juridică
 						</td>
+						<td style="width:77pt">
+							Condominiu
+						</td>
+						<td style="width:77pt">
+							Parti comune
+						</td>
 						<td style="width:196pt">
 							Observaţii / Referinţe
 						</td>
 					</tr>
 
 					<?php
-						$sql = "SELECT * FROM cg_building WHERE landid in (select landid from cg_land where cg_land.cadgenno=" . $param . ") ORDER BY buildno";
-						$result = pg_query($conn2, $sql);
+						$sql = "SELECT * FROM cg_building WHERE landid =" . $landid . " ORDER BY buildno";
+						$result = pg_query($sql);
 						while($row = pg_fetch_row($result)){ 
+						$buildingid = $row[0];
+						$sql11 = "SELECT * FROM cg_buildingcommonparts WHERE buildingid =". $buildingid;
+						$result11 = pg_query($sql11);
 					?>
 					<tr>
 						<td style="width:29pt">
 							A1.<?= $row[3] ?>
 						</td>
-						<td style="width:77pt">
-							<br>
+						<td style="width:29pt">
+							<?= $row[13] ?>
 						</td>
-						<td style="width:95pt">
+						<td style="width:65pt">
 							<?= $row[6] ?>
 						</td>
 						<td style="width:65pt">
 							<?= $row[4] ?>
 						</td>
 						<td style="width:39pt">
-							<?= $row[11]=='true' ? 'Cu acte' :  'Fara acte'; ?>
+							<?= $row[11] ? 'Cu acte' :  'Fara acte'; ?>
+						</td>
+						<td style="width:77pt">
+						<?php
+						if (pg_num_rows($result11) >= 1) {
+						echo "DA"; 
+						}
+						?>
+						</td>
+						<td style="width:77pt">
+						<?php
+						while($row11 = pg_fetch_row($result11)){
+						echo(str_replace("_", " ", $row11[3]).", ");
+						}
+						?>
 						</td>
 						<td style="width:196pt">
 							Nr. niveluri:<?= $row[7] ?>, <?= $row[10] ?>
@@ -222,7 +242,96 @@
 				</tbody>
 			</table>
 
+			<?php
+			$sql12 = "SELECT * FROM cg_iu WHERE buildingid =".$buildingid." ORDER BY identifier";
+			$result12 = pg_query($sql12);
+			if (pg_num_rows($result12) <> 0) {
+			?>
 			<p><br></p>
+			<h3>Unitati individuale</h3>
+			
+			<table>
+				<tbody>
+					<tr>
+						<td style="width:29pt">
+							Crt
+						</td>
+						<td style="width:29pt">
+							Nr cad/ Nr topo
+						</td>
+						<td style="width:35pt">
+							Scara
+						</td>
+						<td style="width:35pt">
+							Etaj
+						</td>
+						<td style="width:35pt">
+							Nr Apartament
+						</td>
+						<td style="width:39pt">
+							Supraf. construita (mp)
+						</td>
+						<td style="width:39pt">
+							Supraf. utila(mp)
+						</td>
+						<td style="width:30pt">
+							Cote parti comune
+						</td>
+						<td style="width:30pt">
+							Cote teren
+						</td>
+						<td style="width:196pt">
+							Observaţii / Referinţe
+						</td>
+					</tr>
+
+					<?php
+						while($row12 = pg_fetch_row($result12)){ 
+						//print_r($row);
+						//$sql11 = "SELECT * FROM cg_buildingcommonparts WHERE buildingid =". $row[0];
+						//$result11 = pg_query($sql11);
+						//print_r($row11 = pg_fetch_row($result11));
+					?>
+					<tr>
+						<td style="width:29pt">
+							A1.1.<?= $row12[3] ?>
+						</td>
+						<td style="width:29pt">
+							<?= $row12[14] ?>
+						</td>
+						<td style="width:65pt">
+							<?= $row12[6] ?>
+						</td>
+						<td style="width:65pt">
+							<?= $row12[12] ?>
+						</td>
+						<td style="width:65pt">
+							<?= $row12[5] ?>
+						</td>
+						<td style="width:39pt">
+							<?= $row12[7] ?>
+						</td>
+						<td style="width:39pt">
+							<?= $row12[8] ?>
+						</td>
+						<td style="width:30pt">
+							<?= $row12[9] ?>
+						</td>
+						<td style="width:30pt">
+							<?= $row12[10] ?>
+						</td>
+						<td style="width:196pt">
+							<?= $row12[11] ?>
+						</td>
+					</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+			<?php
+				}
+			}
+			?>
+			
 			<p><br></p>
 			<h1>B. Partea II. Proprietari şi acte</h1>
 
@@ -239,19 +348,18 @@
 					<?php
 						$sql6="SELECT * FROM cg_registration left join cg_deed on cg_registration.deedid = cg_deed.deedid
 						WHERE (lbpartno=2) and (registrationid in (select registrationid from cg_registrationxentity where 
-						(landid in (select landid from cg_land where cg_land.cadgenno=".$param.")) or (buildingid in (SELECT buildingid from cg_building 
-						where landid in (select landid from cg_land where cg_land.cadgenno=".$param."))))) ORDER BY position";
-						$result = pg_query($conn2, $sql6);
+						(landid =".$landid.") or (buildingid =".$buildingid."))) ORDER BY position";
+						$result = pg_query($sql6);
 						while($row6 = pg_fetch_row($result)){ 
 
 						$sql8="SELECT * FROM cg_person WHERE registrationid=".$row6[0];
-						$result8 = pg_query($conn2, $sql8);
+						$result8 = pg_query($sql8);
 						
 						$sql9="SELECT cg_building.buildno FROM cg_building, cg_registrationxentity WHERE (cg_building.buildingid=cg_registrationxentity.buildingid) and (cg_registrationxentity.registrationid=".$row6[0]  .") order by buildno";
-						$result9 = pg_query($conn2, $sql9);
+						$result9 = pg_query($sql9);
 						
 						$sql10="SELECT landid FROM cg_registrationxentity WHERE (registrationid=".$row6[0].") and(landid > 0)";
-						$result10 = pg_query($conn2, $sql10);
+						$result10 = pg_query($sql10);
 						
 						if (pg_num_rows($result10) > 0) { $a1=1; } else { $a1=0; }
 					?>
@@ -305,7 +413,89 @@
 			</table>
 
 			<p><br></p>
+			<?php
+			$sql7 = "SELECT iuid, identifier FROM cg_iu where buildingid =".$buildingid." order by identifier";
+			$result7 = pg_query($sql7);
+			while($row7 = pg_fetch_row($result7)){ 
+			//print_r($row7);
+			?>
+			<h3>Unitati individuale - constructia C1 - U<?= $row7[1] ?></h3>
+			<table>
+				<tbody>
+					<tr>
+						<td style="width:350pt" colspan="2">
+							Inscrieri privitoare la dreptul de proprietate şi alte drepturi reale
+						</td>
+						<td style="width:150pt">
+							Referinţe
+						</td>
+					</tr>
+					<?php
+						$sql6="SELECT * FROM cg_registration left join cg_deed on cg_registration.deedid = cg_deed.deedid
+						WHERE (lbpartno=2) and (registrationid in (select registrationid from cg_registrationxentity where 
+						iuid =".$row7[0].")) ORDER BY position";
+						$result = pg_query($sql6);
+						while($row6 = pg_fetch_row($result)){ 
+
+						$sql8="SELECT * FROM cg_person WHERE registrationid=".$row6[0];
+						$result8 = pg_query($sql8);
+						
+						$sql9="SELECT cg_building.buildno FROM cg_building, cg_registrationxentity WHERE (cg_building.buildingid=cg_registrationxentity.buildingid) and (cg_registrationxentity.registrationid=".$row6[0]  .") order by buildno";
+						$result9 = pg_query($sql9);
+						
+						$sql10="SELECT landid FROM cg_registrationxentity WHERE (registrationid=".$row6[0].") and(landid > 0)";
+						$result10 = pg_query($sql10);
+						
+						if (pg_num_rows($result10) > 0) { $a1=1; } else { $a1=0; }
+					?>
+
+					<tr>
+						<td style="width:500pt; text-align: left" colspan="3">
+							<?= $row6[15] ?>/ <?= $row6[16] ?>
+						</td>
+					</tr>
+					<tr>
+						<td style="width:500pt; text-align: left" colspan="3">
+							<?= $row6[20] ?> <?= $row6[18] ?>, din <?= $row6[19] ?> emis de <?= $row6[21] ?>
+						</td>
+					</tr>
+					<tr>
+						<td style="width:25pt" rowspan="2">
+							B<?= $row6[14] ?>
+						</td>
+						<td style="width:325pt">
+							<?php
+							if ($row6[1] <>"NOTATION") 
+							{ 
+							?>
+							<?= str_replace("PROVISIONALENTRY","Inscrierea provizorie",$row6[1]) ?>, drept de <?= $row6[2] ?> <?= $row6[3] ?>, dobandit prin 
+							<?= $row6[6] ?>, cota actuala <?= $row6[9] ?> 
+							<?PHP
+							}
+							?>
+							<?= $row6[4] ?> <?= $row6[12] ?>
+						</td>
+						<td style="width:150pt">
+							<?php
+								echo "A1.1.".$row7[1];
+							?>
+							</td>
+					</tr>
+					<tr>
+						<td style="width:475pt" colspan="2">
+							<?php $i=0;
+								while($row8 = pg_fetch_row($result8)){  $i++
+							?>	
+							<?= $i?>) <b><?= $row8[5] ?> <?= $row8[3] ?></b>   (cnp:<?= $row8[20] ?>) <?= $row8[6]=='true' ? 'Defunct' : '' ?><br>
+							<?php } ?>
+						</td>
+					</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+
 			<p><br></p>
+			<?php } ?>
 			<h1>C. Partea III. SARCINI</h1>
 			
 
@@ -322,19 +512,29 @@
 					<?php
 						$sql6="SELECT * FROM cg_registration left join cg_deed on cg_registration.deedid = cg_deed.deedid
 						WHERE (lbpartno=3) and (registrationid in (select registrationid from cg_registrationxentity where 
-						(landid in (select landid from cg_land where cg_land.cadgenno=".$param.")) or (buildingid in (SELECT buildingid from cg_building 
-						where landid in (select landid from cg_land where cg_land.cadgenno=".$param."))))) ORDER BY position";
-						$result = pg_query($conn2, $sql6);
+						(landid =".$landid.") or (buildingid in (SELECT buildingid from cg_building 
+						where landid =".$landid.")))) ORDER BY position";
+						$result = pg_query($sql6);
+						if (pg_num_rows($result) == 0) 
+						{
+					?>
+						<tr>
+						<td style="width:500pt; text-align: left" colspan="3">
+						<b>Nu sunt</b>
+						</td>
+						</tr>	
+					<?php
+						}
 						while($row6 = pg_fetch_row($result)){ 
-
+						
 						$sql8="SELECT * FROM cg_person WHERE registrationid=".$row6[0];
-						$result8 = pg_query($conn2, $sql8);
+						$result8 = pg_query($sql8);
 						
 						$sql9="SELECT cg_building.buildno FROM cg_building, cg_registrationxentity WHERE (cg_building.buildingid=cg_registrationxentity.buildingid) and (cg_registrationxentity.registrationid=".$row6[0]  .") order by buildno";
-						$result9 = pg_query($conn2, $sql9);
+						$result9 = pg_query($sql9);
 						
 						$sql10="SELECT landid FROM cg_registrationxentity WHERE (registrationid=".$row6[0].") and(landid > 0)";
-						$result10 = pg_query($conn2, $sql10);
+						$result10 = pg_query($sql10);
 						
 						if (pg_num_rows($result10) > 0) { $a1=1; } else { $a1=0; }
 					?>
@@ -375,10 +575,14 @@
 							<?php } ?>
 						</td>
 					</tr>
-					<?php } ?>
+					<?php 
+					} 
+					?>
 				</tbody>
 			</table>
-
+			<?php 
+			} 
+			?>
 </div></div></div>
 
 <?php include ('partials/footer.php'); ?>
