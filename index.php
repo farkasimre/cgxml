@@ -29,7 +29,7 @@
 			<h2>DATE DESPRE IMOBILUL NR. <?= $sql1_result_data["cadgenno"] ?></h2>
 			<h2>Sector cadastral: <?= $sql1_result_data["cadsector"] ?></h2>
 			
-			<h1>A. Partea I. Descrierea imobilului</h1>
+			<h1 style="text-align: center;">A. Partea I. Descrierea imobilului</h1>
 
 			<p style="text-align: right;">Identificator electronic: <?= $sql1_result_data["e2identifier"] ?><br>Nr. CF vechi: <?= $sql1_result_data["paperlbno"] ?> 
 			<br>Nr. CAD vechi: <?= $sql1_result_data["papercadno"] ?><br>Nr. topografic: <?= $sql1_result_data["topono"] ?></p>
