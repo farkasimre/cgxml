@@ -402,7 +402,7 @@
 									while ($row8 = pg_fetch_row($result8)) {
 										$i++
 									?>
-										<?= $i ?>) <b><?= $row8[5] ?> <?= $row8[3] ?></b> (cnp:<?= $row8[20] ?>) <?= $row8[6] == 'true' ? 'Defunct' : '' ?>
+										<?= $i ?>) <b><?= $row8[5] ?> <?= $row8[3] ?></b> (cnp:<?= $row8[20] ?>) <?= $row8[6] == 'true' ? 'Defunct' : '' ?><br>
 									<?php } ?>
 								</td>
 							</tr>
