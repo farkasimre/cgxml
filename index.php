@@ -212,7 +212,7 @@
 										<?= $row3[4] ?>
 									</td>
 									<td>
-										<?= $row3[11] ? 'Cu acte' :  'Fara acte'; ?>
+										<?= $row3[11] == 't' ? 'Cu acte' :  'Fara acte'; ?>
 									</td>
 									<td>
 										<?php
